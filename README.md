@@ -25,7 +25,7 @@ python -m pip install jupyterlab numpy scipy pandas matplotlib scikit-learn scik
 jupyter lab
 ```
 
-Run from the repository folder. Place the input LAS at `data/point_cloud.las`, open the normal-estimation notebook, and run its cells in order. It creates `outputs/point_cloud_hough_normals_k30.las` and a JSON sidecar.
+Run from the repository folder. An example LAS point cloud is included at [`data/point_cloud.las`](data/point_cloud.las); open the normal-estimation notebook and run its cells in order. It creates `outputs/point_cloud_hough_normals_k30.las` and a JSON sidecar.
 
 The extraction notebook reads a space-delimited normal table at `data/point_cloud_normals.txt`; its last three columns must contain one normal per input point, in exactly the same order. Convert the companion notebook's LAS output with:
 
@@ -38,7 +38,7 @@ normals = np.column_stack((cloud.normal_x, cloud.normal_y, cloud.normal_z))
 np.savetxt("data/point_cloud_normals.txt", normals, fmt="%.8f")
 ```
 
-Then run the extraction notebook in order. Open3D windows are interactive: close each window to continue execution. The normal notebook exposes `RUN_VISUALIZATION` for its final display. Input data are supplied by the user; this repository contains code only.
+Then run the extraction notebook in order. Open3D windows are interactive: close each window to continue execution. The normal notebook exposes `RUN_VISUALIZATION` for its final display.
 
 ## Outputs and conventions
 
