@@ -12,7 +12,7 @@ Python notebooks for identifying rock discontinuity surfaces and extracting thre
 1. **Estimate local normals.** Query 30 nearest neighbors and vote over 512 Fibonacci-sphere directions using distance-weighted orthogonality scores. Save the selected unit normals as LAS Extra Bytes fields.
 2. **Separate surfaces and edges.** Compute the mean unsigned angular difference between neighboring normals. Apply three-class fuzzy c-means (FCM); the class with the lowest curvature center supplies plane candidates, and the remaining classes supply edge candidates.
 3. **Cluster the candidates.** Apply DBSCAN separately to edge points (`eps=0.12`, `min_samples=4`) and plane candidates (`eps=0.07`, `min_samples=4`). Retain non-noise edge points for trace extraction.
-4. **Inspect discontinuity surfaces.** Check within-cluster normal variance, split qualifying clusters with two-class KMeans, and estimate surface orientations with PCA. Export intermediate colored LAS files and an orientation spreadsheet.
+4. **Estimate surface orientations.** Use PCA to estimate the orientation of eligible DBSCAN plane clusters. Export the colored plane point cloud and an orientation spreadsheet.
 5. **Reconstruct traces.** Associate each cleaned edge point with its two dominant neighboring plane labels using 60 neighbors. Use the cross product of the fitted PCA normals for the trace direction and the grouped edge-point centroid for its position. Project points onto this line and split segments at gaps greater than `0.5` coordinate units. The final trace stage uses the original DBSCAN plane labels.
 6. **Save the result.** Export trace endpoints as a `POLYLINEZ` Shapefile with segment ID and three-dimensional length.
 
@@ -44,5 +44,5 @@ Then run the extraction notebook in order. Open3D windows are interactive: close
 
 - Main outputs are written under `outputs/`, including `trace_lines_3d.shp`, `.shx`, and `.dbf`. Keep these Shapefile components together.
 - Distance parameters use the input coordinate units. The extraction notebook subtracts the input coordinate minima. The final export retains the source default `global_offset=None`, so traces use this local coordinate frame. To restore input coordinates, pass `offset` to the final export call as `global_offset=offset`; assign the input CRS separately when needed.
-- Hough normals are unoriented axes: `n` and `-n` are equivalent. Consistent orientation is needed when interpreting the sign-sensitive normal-refinement and ridge/valley stages.
-- This English release preserves the source parameters and computations, with portable paths and explicit definitions of the FCM non-plane edge mask and its colors. Saved execution outputs are cleared.
+- Hough normals are unoriented axes: `n` and `-n` are equivalent. Consistent orientation is needed when interpreting the sign-sensitive ridge/valley classification.
+- The FCM, DBSCAN, and trace-extraction parameters are retained, with portable paths and explicit definitions of the FCM non-plane edge mask and its colors. Saved execution outputs are cleared.
